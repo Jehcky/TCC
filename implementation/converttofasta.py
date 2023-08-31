@@ -3,7 +3,6 @@ from Bio import SeqIO
 import gzip
 
 def convert_to_fasta():
-    print(os.path.curdir)
     FASTQ_FOLDER = "/data/TCC/dataset/FASTQ/"
     FASTA_FOLDER = "/data/TCC/dataset/FASTA/"
     
