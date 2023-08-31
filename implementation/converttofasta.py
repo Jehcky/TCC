@@ -13,7 +13,7 @@ def convert_to_fasta():
     # Lista todos os arquivos na pasta de entrada que têm a extensão .fastq
     fastq_files = [f for f in os.listdir(FASTQ_FOLDER) if f.endswith(".fastq.gz")]
 
-    count_files = 0
+    count_files = fastq_files.count()
     # Loop para percorrer os arquivos FASTQ
     for fastq_file in fastq_files:
         
