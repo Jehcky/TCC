@@ -1,7 +1,7 @@
 import subprocess
 
 # minimap2 command
-#-ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
+# minimap2 -ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
 minimap2_command = [
 "minimap2"
 , 
