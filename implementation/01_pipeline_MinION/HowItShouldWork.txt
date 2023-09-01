@@ -1,3 +1,5 @@
+# This is a shell script
+
 REF_FILE=RHD_GeneCompleto.fasta # genoma referencia
 FASTQ=nanopore_26_.fastq # arquivo de entrada fastq
 
