@@ -1,0 +1,34 @@
+REF_FILE=RHD_GeneCompleto.fasta # genoma referencia
+FASTQ=nanopore_26_.fastq # arquivo de entrada fastq
+
+
+SEQ=`basename $FASTQ .fastq.gz`
+OUTPUT_FILE="Genoma_${SEQ}.fasta"
+
+minimap2 -ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
+samtools view -S -b ${SEQ}.PrePilon.sam > ${SEQ}.PrePilon.bam
+samtools sort ${SEQ}.PrePilon.bam -o ${SEQ}.PrePilon.sorted.bam
+samtools index ${SEQ}.PrePilon.sorted.bam
+
+pilon --genome $REF_FILE --frags ${SEQ}.PrePilon.sorted.bam --output ${SEQ}.Pilon --fix "gaps,indels" --threads 1 --mindepth 5
+
+bwa index ${SEQ}.Pilon.fasta
+bwa mem ${SEQ}.Pilon.fasta $FASTQ | samtools sort -o ${SEQ}.Pilon.sorted.bam
+
+samtools index ${SEQ}.Pilon.sorted.bam
+
+REF_FILE1=${SEQ}.Pilon.fasta
+BAM_FILE=${SEQ}.Pilon.sorted.bam
+SEQ_NAME=`basename $REF_FILE1 _ref.fasta`
+REF_NAME=`cat $REF_FILE1 | grep '>' | tr -d '>' | cut -d ' ' -f 1`
+LENGTH=`tail -n +2 $REF_FILE1 | tr -d '\n' | wc -m | xargs`
+
+echo -e "$REF_NAME\t$LENGTH" > my.genome
+bedtools bamtobed -i $BAM_FILE > reads.bed
+bedtools genomecov -bga -i reads.bed -g my.genome | awk '$4 < 20' > zero.bed
+maskFastaFromBed -fi $REF_FILE1 -bed zero.bed -fo masked.fasta
+bcftools mpileup -Ou -f masked.fasta $BAM_FILE | bcftools call --ploidy 1 -mv -Oz -o test.vcf.gz
+bcftools index test.vcf.gz
+cat masked.fasta | bcftools consensus test.vcf.gz > new_consensus.fasta
+echo ">$SEQ_NAME" > $OUTPUT_FILE
+tail -n +2 new_consensus.fasta >> $OUTPUT_FILE
