@@ -1,11 +1,11 @@
-# TCC - IDENTIFICAÇÃO DE MARCADORES GENÉTICOS RELACIONADOS À EXPRESSÃO DE ANTÍGENOS DE GRUPOS SANGUÍNEOS ERITROCITÁRIOS UTILIZANDO PROCESSAMENTO DE DADOS BRUTOS DE SEQUENCIAMENTO DE NOVA GERAÇÃO
+## TCC - IDENTIFICAÇÃO DE MARCADORES GENÉTICOS RELACIONADOS À EXPRESSÃO DE ANTÍGENOS DE GRUPOS SANGUÍNEOS ERITROCITÁRIOS UTILIZANDO PROCESSAMENTO DE DADOS BRUTOS DE SEQUENCIAMENTO DE NOVA GERAÇÃO
 Trabalho de Conclusão do curso de Sistemas de Informação da Universidade do Estado da Bahia
 
-## Objetivos
+### Objetivos
 
 Desenvolver um ambiente de experimentação de técnicas para a identificação de grupos sanguíneos e marcadores genéticos provenientes de dados de sequenciamento genético em plataformas de Next-Generation Sequencing (NGS).
 
-### Objetivos Específicos
+#### Objetivos Específicos
 
 Na identificação de marcadores genéticos de grupos sanguíneos:
 
