@@ -1,5 +1,5 @@
 import subprocess
-import pysam
+#import pysam
 
 # minimap2 command
 # minimap2 -ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
@@ -10,9 +10,9 @@ minimap2_command = [
 ,
 "map-ont"
 ,
-"/data/TCC/implementation/RefSeq/RefSeq_RHD.fasta"
+"/home/TCC/implementation/RefSeq/RefSeq_RHD.fasta"
 ,
-"/data/TCC/dataset/FASTQ/uncompressed/AF2RHD_S55_L001_R2_001.fastq"
+"/home/TCC/dataset/FASTQ/uncompressed/AF2RHD_S55_L001_R2_001.fastq"
 ,
 ">"
 ,
