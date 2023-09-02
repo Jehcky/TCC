@@ -1,4 +1,5 @@
 import subprocess
+import pysam
 
 # minimap2 command
 # minimap2 -ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
