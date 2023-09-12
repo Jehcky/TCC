@@ -16,5 +16,4 @@ for sam_file in sam_files:
     command = f"samtools view -S -b {INPUT_FOLDER}{sam_name}.PrePilon.sam > {OUTPUT_FOLDER}{sam_name}.PrePilon.bam"
 
     status = subprocess.call(command, shell=True)
-    if status:
-        print(f"Samtools view complete. .BAM file saved as {sam_name}.PrePilon.bam.")
+    print(f"Samtools view complete. .BAM file saved as {sam_name}.PrePilon.bam.")
