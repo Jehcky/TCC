@@ -1,51 +1,16 @@
 import subprocess
-import pysam
+import os
 
-# minimap2 command
-# minimap2 -ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
-minimap2_command = ["minimap2",
-                    "-ax",
-                    "map-ont",
-                    "/home/TCC/implementation/RefSeq/RefSeq_RHD.fasta",
-                    "/home/TCC/dataset/FASTQ/uncompressed/AF2RHD_S55_L001_R2_001.fastq",
-                    ">",
-                    "AF2RHD_S55_L001_R1_001.PrePilon.sam"]
+INPUT_FOLDER = "/home/TCC/dataset/FASTQ/uncompressed/"
+OUTPUT_FOLDER = "/home/TCC/result/01_minimap2_result/"
+REF_SEQ_FOLDER = "/home/TCC/implementation/RefSeq/"
 
-# Execute minimap2 and get the output
-output_minimap2 = subprocess.check_output(minimap2_command, universal_newlines=True)
+fastq_files = [f for f in os.listdir(INPUT_FOLDER) if f.endswith(".fastq")]
 
-# Path to the output BAM file
-bam_file = "output.bam"
+for fastq_file in fastq_files:
+    fastq_name = fastq_file.rstrip(".fastq")
+    command = f"minimap2 -ax map-ont {REF_SEQ_FOLDER}RefSeq_RHD.fasta {INPUT_FOLDER}{fastq_name}.fastq > {OUTPUT_FOLDER}{fastq_name}.PrePilon.sam"
 
-# Create a BAM file for writing
-output_bam = pysam.AlignmentFile(bam_file, "wb", header={"HD": {"VN": "1.6"}, "SQ": [{"LN": 1000, "SN": "chr1"}]})
-
-# Read the text file and convert it to BAM format
-#with open(text_file, 'r') as text_data:
-for line in output_minimap2:
-    parts = line.strip().split('\t')
-    if len(parts) != 2:
-        continue
-
-    read_name, sequence = parts
-    read = pysam.AlignedSegment()
-    read.query_name = read_name
-    read.query_sequence = sequence
-    read.flag = 0
-  
-# Assuming no special flags
-    read.reference_id = 0
-  
-# Assuming a single reference sequence
-    read.reference_start = 0
-  
-# Start position on the reference
-    read.mapping_quality = 255
-  
-# Maximum mapping quality
-    output_bam.write(read)
-
-# Close the BAM file
-output_bam.close()
-
-print("Conversão para BAM completa.")
+    status = subprocess.call(command, shell=True)
+    if status:
+        print(f"Alignment complete. .SAM file saved as {fastq_name}.PrePilon.sam.")
