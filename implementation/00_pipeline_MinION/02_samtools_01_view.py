@@ -12,8 +12,8 @@ if not os.path.exists(OUTPUT_FOLDER):
 sam_files = [f for f in os.listdir(INPUT_FOLDER) if f.endswith(".PrePilon.sam")]
 
 for sam_file in sam_files:
-    sam_name = sam_file.rstrip(".PrePilon.sam")
-    command = f"samtools view -S -b {INPUT_FOLDER}{sam_name}.PrePilon.sam > {OUTPUT_FOLDER}{sam_name}.PrePilon.bam"
+    file_name = sam_file.rstrip(".PrePilon.sam")
+    command = f"samtools view -S -b {INPUT_FOLDER}{file_name}.PrePilon.sam > {OUTPUT_FOLDER}{file_name}.PrePilon.bam"
 
     status = subprocess.call(command, shell=True)
-    print(f"Samtools view complete. .BAM file saved as {sam_name}.PrePilon.bam.")
+    print(f"Samtools view complete. .BAM file saved as {file_name}.PrePilon.bam.")
