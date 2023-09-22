@@ -3,7 +3,7 @@ import os
 
 #bwa index ${SEQ}.Pilon.fasta
 
-INPUT_FOLDER = "/home/TCC/result/03_pilon_01_result/"
+INPUT_FOLDER = "/home/TCC/result/03_pilon_01/"
 
 fasta_files = [f for f in os.listdir(INPUT_FOLDER) if f.endswith(".Pilon.fasta")]
 

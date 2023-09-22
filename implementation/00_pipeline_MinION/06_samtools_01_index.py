@@ -3,7 +3,7 @@ import os
 
 # samtools index ${SEQ}.PrePilon.sorted.bam
 
-INPUT_FOLDER = "/home/TCC/result/02_samtools_02_sort_result/"
+INPUT_FOLDER = "/home/TCC/result/02_samtools_02_sort/"
 
 bam_files = [f for f in os.listdir(INPUT_FOLDER) if f.endswith(".PrePilon.sorted.bam")]
 

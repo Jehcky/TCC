@@ -3,8 +3,8 @@ import os
 
 #bwa mem ${SEQ}.Pilon.fasta $FASTQ | samtools sort -o ${SEQ}.Pilon.sorted.bam
 
-INPUT_FOLDER = "/home/TCC/result/03_pilon_01_result/"
-PILON_SORTED_FOLDER = "/home/TCC/result/02_samtools_02_sort_result/"
+INPUT_FOLDER = "/home/TCC/result/03_pilon_01/"
+PILON_SORTED_FOLDER = "/home/TCC/result/02_samtools_02_sort/"
 fasta_files = [f for f in os.listdir(INPUT_FOLDER) if f.endswith(".Pilon.fasta")]
 
 for fasta_file in fasta_files:

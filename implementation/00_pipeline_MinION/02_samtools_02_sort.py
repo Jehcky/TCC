@@ -3,8 +3,8 @@ import os
 
 # samtools sort ${SEQ}.PrePilon.bam -o ${SEQ}.PrePilon.sorted.bam
 
-INPUT_FOLDER = "/home/TCC/result/02_samtools_01_view_result/"
-OUTPUT_FOLDER = "/home/TCC/result/02_samtools_02_sort_result/"
+INPUT_FOLDER = "/home/TCC/result/02_samtools_01_view/"
+OUTPUT_FOLDER = "/home/TCC/result/02_samtools_02_sort/"
 
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
