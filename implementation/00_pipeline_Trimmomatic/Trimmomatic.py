@@ -100,4 +100,4 @@ def step_05(ref_seq, output_folder, file_name_parts):
         -o {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.calls.norm.vcf.gz"
     print("Step 5: " + command)
     subprocess.call(command, shell=True)
-Trimmomatic()    
+Trimmomatic()
