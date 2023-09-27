@@ -1,0 +1,33 @@
+trimmomatic PE 
+-threads 2 -phred33 
+1021-22_S60_L001_R1_001.fastq.gz 
+1021-22_S60_L001_R2_001.fastq.gz 
+processed/1021-22_S60_L001_R1_001_trim.fastq.gz 
+processed/1021-22_S60_L001_R1_001_utrim.fastq.gz 
+processed/1021-22_S60_L001_R2_001_trim.fastq.gz 
+processed/1021-22_S60_L001_R2_001_utrim.fastq.gz 
+ILLUMINACLIP:adapters.fasta:2:30:10 
+LEADING:10 
+TRAILING:10 
+SLIDINGWINDOW:4:15 
+HEADCROP:15 
+MINLEN:50
+
+minimap2 -a -t 2 -x sr  refeseq.fasta processed/1021-22_S60_L001_R1_001_trim.fastq.gz processed/1021-22_S60_L001_R2_001_trim.fastq.gz | samtools view -bS -F 4 - | samtools sort -o 1021-22_S60.sorted.bam –
+
+samtools index 1021-22_S60.sorted.bam 
+
+bcftools mpileup --threads 2 --max-depth 2000 -E -Ou -f refeseq.fasta 1021-22_S60.sorted.bam  | bcftools call --ploidy 1 --threads 2 -mv -Oz -o 1021-22_S60.calls.vcf.gz
+
+bcftools norm --threads 2 -f refeseq.fasta 1021-22_S60.calls.vcf.gz -Oz -o 1021-22_S60.calls.norm.vcf.gz
+
+bcftools filter --threads 2 --IndelGap 5 1021-22_S60.calls.norm.vcf.gz -Oz -o 1021-22_S60.calls.norm.flt-indels.vcf.gz
+
+bcftools index --threads 2 1021-22_S60.calls.norm.flt-indels.vcf.gz
+
+bcftools consensus -f refeseq.fasta 1021-22_S60.calls.norm.flt-indels.vcf.gz > $name.temp.consensus.fasta
+
+bedtools genomecov -bga -ibam 1021-22_S60.sorted.bam > $name.table_cov.txt
+
+bedtools genomecov -d -ibam 1021-22_S60.sorted.bam > $name.table_cov_basewise.txt
+

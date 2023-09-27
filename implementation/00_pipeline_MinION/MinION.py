@@ -1,6 +1,6 @@
 import subprocess
 import os
-import Gene
+import implementation.Gene as Gene
 
 # uncompress
 import os
@@ -104,13 +104,8 @@ def step_04_samtools_index(output_folder, fastq_name):
 
 def step_05_pilon(output_folder, fastq_name, ref_seq):
     # Executar: pilon --genome $REF_FILE --frags ${SEQ}.PrePilon.sorted.bam --output ${SEQ}.Pilon --fix "gaps,indels" --threads 1 --mindepth 5
-    bam_file = os.path.basename(
-        output_folder + fastq_name + ".PrePilon.sorted.bam")
+    bam_file = os.path.basename(output_folder + fastq_name + ".PrePilon.sorted.bam")
     file_name = bam_file.rstrip(".PrePilon.sorted.bam")
-    '''if Gene.Gene.RHD.value in file_name:
-        ref_seq = f"/home/TCC/implementation/RefSeq/RefSeq_{Gene.Gene.RHD.value}.fasta"
-    elif Gene.Gene.RHCE.value in file_name:
-        ref_seq = f"/home/TCC/implementation/RefSeq/RefSeq_{Gene.Gene.RHCE.value}.fasta"'''
     command = f"pilon --genome {ref_seq} --frags {output_folder}{bam_file} --output {output_folder}{file_name}.Pilon --fix \"gaps,indels\" --threads 1 --mindepth 5"
     status = subprocess.call(command, shell=True)
     print(f"Pilon complete. .Pilon file saved as {file_name}.Pilon.fasta")
