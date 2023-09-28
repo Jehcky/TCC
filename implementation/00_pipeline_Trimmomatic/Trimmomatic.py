@@ -23,6 +23,11 @@ def Trimmomatic():
         step_03(output_folder, file_name_parts)
         step_04(ref_seq, output_folder, file_name_parts)
         step_05(ref_seq, output_folder, file_name_parts)
+        step_06(output_folder, file_name_parts)
+        step_07(output_folder, file_name_parts)
+        step_08(ref_seq, output_folder, file_name_parts)
+        step_09(output_folder, file_name_parts)
+        step_10(output_folder, file_name_parts)
 
 def get_ref_seq(file_name):
     # Get RefSeq
@@ -99,5 +104,39 @@ def step_05(ref_seq, output_folder, file_name_parts):
         {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.calls.vcf.gz -Oz \
         -o {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.calls.norm.vcf.gz"
     print("Step 5: " + command)
+    subprocess.call(command, shell=True)
+
+def step_06(output_folder, file_name_parts):
+    command = f"bcftools filter --threads 2 --IndelGap 5 \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.calls.norm.vcf.gz -Oz -o \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.calls.norm.flt-indels.vcf.gz"
+    print("Step 6: " + command)
+    subprocess.call(command, shell=True)
+
+def step_07(output_folder, file_name_parts):
+    command = f"bcftools index --threads 2 \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.calls.norm.flt-indels.vcf.gz"
+    print("Step 7: " + command)
+    subprocess.call(command, shell=True)
+
+def step_08(ref_seq, output_folder, file_name_parts):
+    command = f"bcftools consensus -f \
+        {ref_seq} \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.calls.norm.flt-indels.vcf.gz \
+        > {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.temp.consensus.fasta"
+    print("Step 8: " + command)
+    subprocess.call(command, shell=True)
+    
+def step_09(output_folder, file_name_parts):
+    command = f"bedtools genomecov -bga -ibam \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.sorted.bam > \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.table_cov.txt" 
+    print("Step 9: " + command)
+    subprocess.call(command, shell=True)
+def step_10(output_folder, file_name_parts):
+    command = f"bedtools genomecov -d -ibam \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.sorted.bam > \
+        {output_folder}{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}.table_cov_basewise.txt"
+    print("Step 10: " + command)
     subprocess.call(command, shell=True)
 Trimmomatic()
