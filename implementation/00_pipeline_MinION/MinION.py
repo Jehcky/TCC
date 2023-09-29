@@ -1,6 +1,6 @@
 import subprocess
 import os
-import implementation.Gene as Gene
+import Gene as Gene
 
 # uncompress
 import os

@@ -2,16 +2,22 @@ import subprocess
 import os
 import Gene
 
-def Trimmomatic():
-    print("Running Trimmomatic pipeline...\n")
-    FASTQ_GZ_FOLDER = "/home/TCC/dataset/FASTQ/"
-    r1_files = [f for f in os.listdir(FASTQ_GZ_FOLDER) if (f.endswith(".fastq.gz") and "R1" in f.upper())]
+import time
 
+FASTQ_GZ_FOLDER = "/home/TCC/dataset/FASTQ/"
+
+def Trimmomatic():
+    
+    print("Running Trimmomatic pipeline...\n")
+    start_time = time.time()
+
+    r1_files = [f for f in os.listdir(FASTQ_GZ_FOLDER) if (f.endswith(".fastq.gz") and "R1" in f.upper())]
+    
     for r1_file in r1_files:
         file_name = r1_file.strip(".fastq.gz")
         file_name_parts = file_name.split("_")
         ref_seq = get_ref_seq(file_name)
-        r2_file = get_r2_file(file_name, FASTQ_GZ_FOLDER)
+        r2_file = get_r2_file(file_name)
         r2_file.join(".fastq.gz")
 
         output_folder = f"/home/TCC/result/Trimmomatic/{file_name_parts[0]}_{file_name_parts[1]}_{file_name_parts[2]}/"
@@ -28,6 +34,8 @@ def Trimmomatic():
         step_08(ref_seq, output_folder, file_name_parts)
         step_09(output_folder, file_name_parts)
         step_10(output_folder, file_name_parts)
+    end_time = time.time()
+    print("End of Trimmomatic.")
 
 def get_ref_seq(file_name):
     # Get RefSeq
@@ -36,12 +44,12 @@ def get_ref_seq(file_name):
     elif Gene.Gene.RHCE.value in file_name:
         return f"/home/TCC/implementation/RefSeq/RefSeq_{Gene.Gene.RHCE.value}.fasta"
 
-def get_r2_file(file_name, folder):
+def get_r2_file(file_name):
     prefix = file_name.split("_")
-    r2_file = [f for f in os.listdir(folder) if (f.find(prefix[0]) != -1 and "R2" in f.upper())]
+    r2_file = [f for f in os.listdir(FASTQ_GZ_FOLDER) if (f.find(prefix[0]) != -1 and "R2" in f.upper())]
     return r2_file[0]
 
-def step_01(fastq_folder, r1_file, r2_file, output_folder):
+def step_01(r1_file, r2_file, output_folder):
     # trimmomatic PE 
     #-threads 2 -phred33 
     # 1021-22_S60_L001_R1_001.fastq.gz 
@@ -62,8 +70,8 @@ def step_01(fastq_folder, r1_file, r2_file, output_folder):
         os.makedirs(output_folder)
     adapters = "/home/TCC/implementation/00_pipeline_Trimmomatic/Adapters/adapters.fasta"
     command = f"trimmomatic PE -threads 2 -phred33 \
-        {fastq_folder}{r1_file} \
-        {fastq_folder}{r2_file} \
+        {FASTQ_GZ_FOLDER}{r1_file} \
+        {FASTQ_GZ_FOLDER}{r2_file} \
         {output_folder}{r1_stripped}_trim.fastq.gz \
         {output_folder}{r1_stripped}_utrim.fastq.gz \
         {output_folder}{r2_stripped}_trim.fastq.gz \
