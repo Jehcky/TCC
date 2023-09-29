@@ -1,6 +1,9 @@
+import sys
+sys.path.append('/home/TCC/implementation')
+
 import subprocess
 import os
-import Gene
+import Gene as Gene
 
 import time
 

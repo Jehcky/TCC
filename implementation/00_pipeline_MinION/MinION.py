@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/home/TCC/implementation')
+
 import subprocess
 import os
 import Gene as Gene
