@@ -1,3 +1,0 @@
-1. sudo apt-get install bedtools bcftools minimap2 samtools pilon bwa
-2. Trimmoatic
-2. mafft
