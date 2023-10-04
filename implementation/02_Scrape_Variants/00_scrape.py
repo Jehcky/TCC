@@ -11,8 +11,6 @@ import Gene
 URL_NCBI = "https://www.ncbi.nlm.nih.gov"
 
 def scrape_gene_variants():
-    # TODO: Download multifasta file containing all gene variants
-
     # Set chromedriver executable path
     service = Service(executable_path='/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()
@@ -26,6 +24,7 @@ def scrape_gene_variants():
     # IT WASN'T WORKING SO I HAD TO DO THIS, PLS READ ABOVE :D
     options.add_argument("--no-sandbox")
 
+    # Another workaround for another error
     options.add_argument('--disable-dev-shm-usage') 
 
     driver = webdriver.Chrome(service=service, options=options)

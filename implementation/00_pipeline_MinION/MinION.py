@@ -11,6 +11,7 @@ import gzip
 import shutil
 
 def uncompress_fastq_gz():
+    # TODO: Finish MinION pipeline for ION technology sequencing files
     INPUT_FOLDER = "/home/TCC/dataset/FASTQ"
     OUTPUT_FOLDER = "/home/TCC/dataset/FASTQ/uncompressed"
 
@@ -176,7 +177,6 @@ def step_09_consensus(output_folder, fastq_name):
     # echo ">$SEQ_NAME" > $OUTPUT_FILE
     # tail -n +2 new_consensus.fasta >> $OUTPUT_FILE
 # EXEC
-
 
 # uncompress_fastq_gz()
 MinION()
