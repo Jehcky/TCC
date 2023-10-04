@@ -40,10 +40,17 @@ def scrape_gene_variants():
         href = driver.find_element(By.ID, 'gene_refseqtranscripts').get_attribute('href')
         driver.get(href)
         driver.find_element(By.XPATH, '//*[@id="seqsendto"]/a').click()
+        time.sleep(2)
         driver.find_element(By.ID, 'complete_rec').click()
+        time.sleep(2)
         driver.find_element(By.ID, 'dest_File').click()
+        time.sleep(2)
         driver.find_element(By.ID, 'file_format').send_keys('fasta')
+        time.sleep(2)
         driver.find_element(By.XPATH, '//*[@id="submenu_File"]/button').click()
+
+        time.sleep(5)
+        os.rename("/home/TCC/GeneVariants/sequence.fasta", f"/home/TCC/GeneVariants/{gene_type.name}.fasta")
     driver.quit()
 
 scrape_gene_variants()
