@@ -4,20 +4,19 @@ import os
 import subprocess
 import Gene
 
-RESULT_FOLDER = "/home/TCC/GeneVariants/Alignment/"
-
-def get_ref_seq(file_name):
-    if Gene.Gene.RHD.value in file_name:
-        return f"/home/TCC/implementation/RefSeq/RefSeq_{Gene.Gene.RHD.value}.fasta"
-    elif Gene.Gene.RHCE.value in file_name:
-        return f"/home/TCC/implementation/RefSeq/RefSeq_{Gene.Gene.RHCE.value}.fasta"
+VARIANTS_FOLDER = "/home/TCC/GeneVariants/"
+REF_SEQ_FOLDER = "/home/TCC/implementation/RefSeq/"
+OUTPUT_FOLDER = "/home/TCC/GeneVariants/Aligned/"
     
 def multiple_alignment():
-    consensus_list = os.listdir(RESULT_FOLDER)
-    for consensus in consensus_list:
-        consensus_file = f"{RESULT_FOLDER}{consensus}/{consensus}.temp.consensus.fasta"
-        ref_seq = get_ref_seq(consensus)
-        command = f"mafft --auto {consensus_file} > {RESULT_FOLDER}{consensus}/{consensus}_mafft.fasta"
+    for gene in Gene.Gene:
+        if not os.path.exists(OUTPUT_FOLDER):
+            os.makedirs(OUTPUT_FOLDER)
+        if not os.path.exists(f"{OUTPUT_FOLDER}{gene.name}/"):
+            os.makedirs(f"{OUTPUT_FOLDER}{gene.name}/")
+        gene_file = f"{VARIANTS_FOLDER}{gene.name}.fasta"
+        ref_seq = f"{REF_SEQ_FOLDER}RefSeq_{gene.name}.fasta"
+        command = f"mafft --auto {gene_file} > {OUTPUT_FOLDER}{gene.name}/{gene.name}_aligned.fasta"
         print("Aligning with MAFFT: " + command)
         subprocess.call(command, shell=True)
 

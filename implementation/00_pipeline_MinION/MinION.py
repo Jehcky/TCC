@@ -10,36 +10,7 @@ import os
 import gzip
 import shutil
 
-def uncompress_fastq_gz():
-    # TODO: Finish MinION pipeline for ION technology sequencing files
-    INPUT_FOLDER = "/home/TCC/dataset/FASTQ"
-    OUTPUT_FOLDER = "/home/TCC/dataset/FASTQ/uncompressed"
-
-    # Verificar se a pasta de saída existe; se não existir, ela é criada
-    if not os.path.exists(OUTPUT_FOLDER):
-        os.makedirs(OUTPUT_FOLDER)
-
-    # Listar todos os arquivos na pasta de entrada que possuem a extensão .fastq.gz
-    print("Searching files...")
-    fastq_gz_files = [f for f in os.listdir(
-        INPUT_FOLDER) if f.endswith(".fastq.gz")]
-
-    # Loop através de cada arquivo .fastq.gz encontrado
-    print("Uncompressing files...")
-    for fastq_gz_file in fastq_gz_files:
-        # Constrir o caminho completo para o arquivo .fastq.gz de entrada
-        fastq_gz_complete_path = os.path.join(INPUT_FOLDER, fastq_gz_file)
-
-        # Construir o caminho completo para o arquivo descomprimido
-        complete_output_path = os.path.join(
-            OUTPUT_FOLDER, fastq_gz_file.replace(".gz", ""))
-
-        # Abrir o arquivo .fastq.gz de entrada, descomprimir e salvar
-        with gzip.open(fastq_gz_complete_path, 'rb') as f_in:
-            with open(complete_output_path, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-
-    print("All files uncompressed!")
+# TODO: Finish MinION pipeline for ION technology sequencing files
 
 def MinION():
 
@@ -76,13 +47,13 @@ def get_ref_seq(fastq_name):
         return f"/home/TCC/implementation/RefSeq/RefSeq_{Gene.Gene.RHCE.value}.fasta"
 
 def step_01_minimap2(fastq_name, output_folder, fastq_folder, ref_seq):
-    # Executar: minimap2 -ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
+    # Execute: minimap2 -ax map-ont $REF_FILE $FASTQ > ${SEQ}.PrePilon.sam
     command = f"minimap2 -ax map-ont {ref_seq} {fastq_folder}{fastq_name}.fastq > {output_folder}{fastq_name}.PrePilon.sam"
     subprocess.call(command, shell=True)
     print(f"Minimap2 map-ont complete. .SAM file saved as {fastq_name}.PrePilon.sam.")
 
 def step_02_samtools_view(output_folder, fastq_name):
-    # Executar: samtools view -S -b ${SEQ}.PrePilon.sam > ${SEQ}.PrePilon.bam
+    # Execute: samtools view -S -b ${SEQ}.PrePilon.sam > ${SEQ}.PrePilon.bam
     print("Running command: samtools view -S -b ${SEQ}.PrePilon.sam > ${SEQ}.PrePilon.bam")
     sam_file = os.path.basename(output_folder + fastq_name + ".PrePilon.sam")
     file_name = sam_file.rstrip(".PrePilon.sam")
@@ -91,58 +62,58 @@ def step_02_samtools_view(output_folder, fastq_name):
     print(f"Samtools view complete. .BAM file saved as {file_name}.PrePilon.bam.")
 
 def step_03_samtools_sort(output_folder, fastq_name):
-    # Executar: samtools sort ${SEQ}.PrePilon.bam -o ${SEQ}.PrePilon.sorted.bam
+    # Execute: samtools sort ${SEQ}.PrePilon.bam -o ${SEQ}.PrePilon.sorted.bam
     bam_file = os.path.basename(output_folder + fastq_name + ".PrePilon.bam")
     file_name = bam_file.rstrip(".PrePilon.bam")
     command = f"samtools sort {output_folder}{file_name}.PrePilon.bam -o {output_folder}{file_name}.PrePilon.sorted.bam"
-    status = subprocess.call(command, shell=True)
+    subprocess.call(command, shell=True)
     print(f"Samtools sort complete. .BAM file saved as {file_name}.PrePilon.sorted.bam.")
 
 def step_04_samtools_index(output_folder, fastq_name):
-    # Executar: samtools index ${SEQ}.PrePilon.sorted.bam
+    # Execute: samtools index ${SEQ}.PrePilon.sorted.bam
     bam_file = os.path.basename(output_folder + fastq_name + ".PrePilon.bam")
     file_name = bam_file.rstrip(".PrePilon.sorted.bam")
     command = f"samtools index {output_folder}{file_name}.PrePilon.sorted.bam"
-    status = subprocess.call(command, shell=True)
+    subprocess.call(command, shell=True)
     print(f"Samtools index complete.")
 
 def step_05_pilon(output_folder, fastq_name, ref_seq):
-    # Executar: pilon --genome $REF_FILE --frags ${SEQ}.PrePilon.sorted.bam --output ${SEQ}.Pilon --fix "gaps,indels" --threads 1 --mindepth 5
+    # Execute: pilon --genome $REF_FILE --frags ${SEQ}.PrePilon.sorted.bam --output ${SEQ}.Pilon --fix "gaps,indels" --threads 1 --mindepth 5
     bam_file = os.path.basename(output_folder + fastq_name + ".PrePilon.sorted.bam")
     file_name = bam_file.rstrip(".PrePilon.sorted.bam")
     command = f"pilon --genome {ref_seq} --frags {output_folder}{bam_file} --output {output_folder}{file_name}.Pilon --fix \"gaps,indels\" --threads 1 --mindepth 5"
-    status = subprocess.call(command, shell=True)
+    subprocess.call(command, shell=True)
     print(f"Pilon complete. .Pilon file saved as {file_name}.Pilon.fasta")
 
 def step_06_bwa_index(output_folder, fastq_name):
-    # Executar: bwa index ${SEQ}.Pilon.fasta
+    # Execute: bwa index ${SEQ}.Pilon.fasta
     fasta_file = os.path.basename(output_folder + fastq_name + ".Pilon.fasta")
     file_name = fasta_file.rstrip(".Pilon.fasta")
     command = f"bwa index {output_folder}{file_name}.Pilon.fasta"
-    status = subprocess.call(command, shell=True)
+    subprocess.call(command, shell=True)
     print(f"BWA index complete. .fasta file saved as {file_name}.Pilon.fasta.")
 
 def step_07_bwa_mem(output_folder, fastq_name):
-    # Executar: bwa mem ${SEQ}.Pilon.fasta $FASTQ | samtools sort -o ${SEQ}.Pilon.sorted.bam
+    # Execute: bwa mem ${SEQ}.Pilon.fasta $FASTQ | samtools sort -o ${SEQ}.Pilon.sorted.bam
     fasta_file = os.path.basename(output_folder + fastq_name + ".Pilon.fasta")
     file_name = fasta_file.rstrip(".Pilon.fasta")
     fastq_file = f"/home/TCC/dataset/FASTQ/uncompressed/{file_name}.fastq"
     if not os.path.isfile(fastq_file):
         print("FASTQ file not found.")
     command = f"bwa mem {output_folder}{file_name}.Pilon.fasta {fastq_file} | samtools sort \\-o {output_folder}{file_name}.Pilon.sorted.bam"
-    status = subprocess.call(command, shell=True)
+    subprocess.call(command, shell=True)
     print(f"BWA mem & Samtools sort complete. .fasta file saved as {file_name}.Pilon.fasta.")
 
 def step_08_samtools_index(output_folder, fastq_name):
-    # Executar: samtools index ${SEQ}.PrePilon.sorted.bam
+    # Execute: samtools index ${SEQ}.PrePilon.sorted.bam
     bam_file = os.path.basename(output_folder + fastq_name + ".PrePilon.sorted.bam")
     file_name = bam_file.rstrip(".PrePilon.sorted.bam")
     command = f"samtools index {output_folder}{file_name}.PrePilon.sorted.bam"
-    status = subprocess.call(command, shell=True)
+    subprocess.call(command, shell=True)
     print(f"Samtools index complete. .BAM file saved as {file_name}.PrePilon.sorted.bam.")
 
 def step_09_consensus(output_folder, fastq_name):
-    # Executar:
+    # Execute:
     # REF_FILE1=${SEQ}.Pilon.fasta
     # BAM_FILE=${SEQ}.Pilon.sorted.bam
     # SEQ_NAME=`basename $REF_FILE1 _ref.fasta`

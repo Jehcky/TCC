@@ -6,3 +6,5 @@
 2. trimmoatic
 2. mafft
 3. selenium (using chromedriver)
+4. spades
+5. hashable

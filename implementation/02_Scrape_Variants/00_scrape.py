@@ -8,9 +8,10 @@ import sys
 sys.path.append('/home/TCC/implementation')
 import Gene
 
-URL_NCBI = "https://www.ncbi.nlm.nih.gov"
 
 def scrape_gene_variants():
+    URL_NCBI = "https://www.ncbi.nlm.nih.gov"
+
     # Set chromedriver executable path
     service = Service(executable_path='/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()

@@ -1,3 +1,4 @@
+## PIPELINE 1: NOT OK
 trimmomatic PE 
 -threads 2 -phred33 
 1021-22_S60_L001_R1_001.fastq.gz 
@@ -31,3 +32,44 @@ bedtools genomecov -bga -ibam 1021-22_S60.sorted.bam > $name.table_cov.txt
 
 bedtools genomecov -d -ibam 1021-22_S60.sorted.bam > $name.table_cov_basewise.txt
 
+
+
+
+
+## PIPELINE 2: 
+
+NAMEFILE="AF2RHD_S55"
+
+TrimmomaticPE -threads 8 $NAMEFILE"_L001_R1_001.fastq.gz" $NAMEFILE"_L001_R2_001.fastq.gz" $NAMEFILE"_L001_R1_trimmed_001.fastq.gz" $NAMEFILE"_L001_R1_unpaired_001.fastq.gz" $NAMEFILE"_L001_R2_trimmed_001.fastq.gz" $NAMEFILE"_L001_R2_unpaired_001.fastq.gz" ILLUMINACLIP:adapters.fasta:2:30:10:2:true HEADCROP:15 SLIDINGWINDOW:6:15 MINLEN:50
+
+spades.py -1 $NAMEFILE"_L001_R1_trimmed_001.fastq.gz" -2 $NAMEFILE"_L001_R2_trimmed_001.fastq.gz" -t 8 --only-assembler -k 21,33,55,77 -o assembly
+
+minimap2 -x sr --frag=yes --secondary=yes -N 5 -p 0.8 -a refseq.fasta assembly/scaffolds.fasta | samtools view -bS -F 4 - | samtools sort -o $NAMEFILE"_sorted.bam" -
+
+samtools index $NAMEFILE"_sorted.bam"
+
+SEQ_NAME=`basename refseq.fasta`
+
+REF_NAME=`cat refseq.fasta | grep '>' | tr -d '>' | cut -d ' ' -f 1`
+
+LENGTH=`tail -n +2 refseq.fasta | tr -d '\n' | wc -m | xargs` 
+
+echo -e "$REF_NAME\t$LENGTH" > my.genome
+
+bedtools bamtobed -i $NAMEFILE"_sorted.bam" > reads.bed
+
+bedtools genomecov -bga -i reads.bed -g my.genome | awk '$4 < 1' > zero.bed
+
+maskFastaFromBed -fi refseq.fasta -bed zero.bed -fo masked.fasta
+
+bcftools mpileup -Ou -f masked.fasta $NAMEFILE"_sorted.bam" | bcftools call --ploidy 1 -mv -Oz -o test.vcf.gz
+
+bcftools index test.vcf.gz
+
+cat masked.fasta | bcftools consensus test.vcf.gz > new_consensus.fasta
+
+echo ">$SEQ_NAME" > $NAMEFILE"_draft.fasta"
+
+tail -n +2 new_consensus.fasta >> $NAMEFILE"_draft.fasta"
+
+sed 's/>'"$SEQ_NAME"'/>'"$SEQ_NAME"'/g' $NAMEFILE"_draft.fasta" > $NAMEFILE"_consensus.fasta"
