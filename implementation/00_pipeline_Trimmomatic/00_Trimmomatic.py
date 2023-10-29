@@ -131,7 +131,7 @@ def step_05(ref_seq, output_folder, file_name):
     # tail -n +2 new_consensus.fasta >> $NAMEFILE"_draft.fasta"
     # sed 's/>'"$SEQ_NAME"'/>'"$SEQ_NAME"'/g' $NAMEFILE"_draft.fasta" > $NAMEFILE"_consensus.fasta"
 
-    #seq_name = os.path.basename(ref_seq)
+    #seq_name = {os.path.basename(ref_seq)}
     command = f"cat {ref_seq} | grep '>' | tr -d '>' | cut -d ' ' -f 1"
     ref_name = subprocess.getoutput(command)
     command = f"tail -n +2 {ref_seq} | tr -d '\\n' | wc -m | xargs"
@@ -146,5 +146,5 @@ def step_05(ref_seq, output_folder, file_name):
     subprocess.check_call(f"cat {output_folder}{file_name}_masked.fasta | bcftools consensus {output_folder}{file_name}_test.vcf.gz > {output_folder}{file_name}_new_consensus.fasta", shell=True)
     subprocess.check_call(f"echo {ref_name} > {output_folder}{file_name}_draft.fasta", shell=True)
     subprocess.check_call(f"tail -n +2 {output_folder}{file_name}_new_consensus.fasta >> {output_folder}{file_name}_draft.fasta", shell=True)
-    subprocess.check_call(f"sed 's/>'\"{ref_name}\"'/>'\"{ref_name}\"'/g' {output_folder}{file_name}_draft.fasta > {output_folder}{file_name}_consensus.fasta", shell=True)
+    subprocess.check_call(f"sed 's/>'\"{file_name}\"'/>'\"{file_name}\"'/g' {output_folder}{file_name}_draft.fasta > {output_folder}{file_name}_consensus.fasta", shell=True)
 Trimmomatic()
