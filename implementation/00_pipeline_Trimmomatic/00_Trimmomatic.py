@@ -11,7 +11,6 @@ def Trimmomatic():
     fastq_gz_folder = "/home/TCC/dataset/FASTQ/"
 
     print("Running Trimmomatic pipeline...\n")
-    start_time = time.time()
 
     r1_files = [f for f in os.listdir(fastq_gz_folder) if (f.endswith(".fastq.gz") and "R1" in f.upper())]
     

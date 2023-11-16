@@ -2,6 +2,7 @@
 
 #### Python version: 3.11.3
 
+#### List of tools needed
 1. sudo apt-get install bedtools bcftools minimap2 samtools pilon bwa
 2. trimmomatic
 2. mafft
