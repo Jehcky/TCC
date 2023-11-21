@@ -25,7 +25,10 @@ def find_snps():
             pos = record.POS
             ref = record.REF
             alt = str(record.ALT[0])  # Assumindo um único SNP
-
+            isdeletion = record.is_deletion
+            indel = record.is_indel
+            qual = record.QUAL
+            
             # Coletar informações do BAM na posição do SNP
             for pileupcolumn in bam.pileup(chrom, pos - 1, pos):
                 if pileupcolumn.pos == pos - 1:
@@ -37,7 +40,7 @@ def find_snps():
 
                             # Verificar se a base difere da referência (SNP)
                             if base != ref:
-                                print(f"SNP encontrado em {chrom}:{pos}, Ref: {ref}, Alt: {alt}")
+                                print(f"SNP encontrado em {chrom}:{pos}, Ref: {ref}, Alt: {alt} | Deleção? {isdeletion} | Indel? {indel} | Qual: {qual}")
                                 break
 
         # Fechar os arquivos
