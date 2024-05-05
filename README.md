@@ -14,6 +14,6 @@ Na identificação de marcadores genéticos de grupos sanguíneos:
 * Definir métricas para avaliar o desempenho do algoritmo para a identificação de grupos sanguíneos e dos diferentes marcadores genéticos.
 
 
-Obs.: a documentação do código está contida no arquivo README localizado na pasta home/TCC/documentation/
+Obs.: a documentação do projeto está contida no arquivo README localizado na pasta home/TCC/documentation/
 
 
