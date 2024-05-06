@@ -35,4 +35,4 @@ All the output files generated will be located in the result folder.
 
 After following these steps you'll see console output showing all SNPs found. Then you'll have to manually compare them with mutation tables for each blood group analyzed. Of course, this step will need to be automatized in the future.
 
-If you have any doubts about this project, you can contact me sending an e-mail to jehck.tnj@gmail.com. Happy hunting! 
+If you have any questions about this project, you can contact me sending an e-mail to jehck.tnj@gmail.com. Happy hunting! 
