@@ -18,8 +18,8 @@ Obs.: a documentação do projeto está contida no arquivo README.md localizado 
 
 ===============================================================================================================
 
-## Final Paper - IDENTIFICATION OF GENETIC MARKERS RELATED TO THE EXPRESSION OF ERYTHROCYTE BLOOD GROUP ANTIGENS USING RAW DATA PROCESSING FROM NEXT-GENERATION SEQUENCING
-Final Paper for the Information Systems course at the State University of Bahia
+## Undergraduate Thesis - IDENTIFICATION OF GENETIC MARKERS RELATED TO THE EXPRESSION OF ERYTHROCYTE BLOOD GROUP ANTIGENS USING RAW DATA PROCESSING FROM NEXT-GENERATION SEQUENCING
+Undergraduate Thesis for the Information Systems bachelor's degree at the State University of Bahia
 
 ### Objectives
 
